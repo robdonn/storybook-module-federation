@@ -4,6 +4,7 @@
   "description": "Make your Storybook components available as federated modules",
   "main": "dist/index.js",
   "repository": "git@github.com:robdonn/storybook-module-federation.git",
+  "homepage": "https://github.com/robdonn/storybook-module-federation",
   "author": {
     "name": "Robert Donnelly",
     "email": "dev@robdonn.com",
@@ -12,7 +13,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
