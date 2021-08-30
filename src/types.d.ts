@@ -10,9 +10,15 @@ export interface WebpackConfig extends Configuration {
   entry: string[];
 }
 
-export interface StorybookConfig {
+type WebpackFinal = (config: WebpackConfig) => WebpackConfig;
+
+export interface StorybookConfigInput {
   core?: {
     builder?: string;
   };
-  webpackFinal?: (config: WebpackConfig) => WebpackConfig;
+  webpackFinal?: WebpackFinal;
+}
+
+export interface StorybookConfigOutput extends StorybookConfigInput {
+  webpackFinal: WebpackFinal;
 }

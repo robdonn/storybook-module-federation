@@ -1,7 +1,8 @@
 import VirtualModulesPlugin from 'webpack-virtual-modules';
 import { container } from 'webpack';
 import {
-  StorybookConfig,
+  StorybookConfigInput,
+  StorybookConfigOutput,
   WebpackConfig,
   ModuleFederationPluginOptions,
 } from './types';
@@ -10,7 +11,7 @@ const defaultConfig = (config: WebpackConfig) => config;
 
 export const withStorybookModuleFederation =
   (moduleFederationConfig: ModuleFederationPluginOptions) =>
-  (storybookConfig: StorybookConfig): StorybookConfig => {
+  (storybookConfig: StorybookConfigInput): StorybookConfigOutput => {
     const { webpackFinal = defaultConfig } = storybookConfig;
 
     if (storybookConfig?.core?.builder !== 'webpack5') {
@@ -21,30 +22,34 @@ export const withStorybookModuleFederation =
 
     const { ModuleFederationPlugin } = container;
 
-    storybookConfig.webpackFinal = (...args) => {
-      const generatedWebpackConfig = webpackFinal(...args);
-      const { entry } = generatedWebpackConfig;
+    const newStorybookConfig: StorybookConfigOutput = {
+      ...storybookConfig,
 
-      generatedWebpackConfig.entry = ['./__entry.js'];
+      webpackFinal: (...args) => {
+        const generatedWebpackConfig = webpackFinal(...args);
+        const { entry } = generatedWebpackConfig;
 
-      if (!generatedWebpackConfig.plugins) {
-        generatedWebpackConfig.plugins = [];
-      }
+        generatedWebpackConfig.entry = ['./__entry.js'];
 
-      generatedWebpackConfig.plugins.push(
-        new ModuleFederationPlugin(moduleFederationConfig)
-      );
+        if (!generatedWebpackConfig.plugins) {
+          generatedWebpackConfig.plugins = [];
+        }
 
-      generatedWebpackConfig.plugins.push(
-        new VirtualModulesPlugin({
-          './__entry.js': entry
-            .map((entryFile) => `import('${entryFile}');`)
-            .join('\n'),
-        })
-      );
+        generatedWebpackConfig.plugins.push(
+          new ModuleFederationPlugin(moduleFederationConfig)
+        );
 
-      return generatedWebpackConfig;
+        generatedWebpackConfig.plugins.push(
+          new VirtualModulesPlugin({
+            './__entry.js': entry
+              .map((entryFile) => `import('${entryFile}');`)
+              .join('\n'),
+          })
+        );
+
+        return generatedWebpackConfig;
+      },
     };
 
-    return storybookConfig;
+    return newStorybookConfig;
   };

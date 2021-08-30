@@ -11,11 +11,15 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.1",
     "@types/node": "^16.7.6",
     "@types/webpack": "^5.28.0",
+    "jest": "^27.1.0",
+    "ts-jest": "^27.0.5",
     "typescript": "^4.4.2",
     "webpack": "^5.51.1"
   },
