@@ -1,6 +1,6 @@
 {
   "name": "storybook-module-federation",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Make your Storybook components available as federated modules",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
