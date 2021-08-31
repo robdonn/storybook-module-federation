@@ -1,7 +1,7 @@
 import { container } from 'webpack';
 import VirtualModulesPlugin from 'webpack-virtual-modules';
-import { StorybookConfigInput } from '../types';
-import { withStorybookModuleFederation } from '..';
+import { StorybookConfigInput } from '../plugin';
+import { withStorybookModuleFederation } from '../main';
 
 jest.mock('webpack', () => ({
   container: {
@@ -57,6 +57,30 @@ describe('withStorybookModuleFederation', () => {
     expect(config.entry).toEqual(['./__entry.js']);
   });
 
+  it('should add virtual modules plugin with entry configuration', () => {
+    const wrapper = withStorybookModuleFederation({});
+
+    const dummyWebpackConfig = {
+      entry: ['first', 'second'],
+    };
+
+    const storybookConfig = wrapper({
+      core: {
+        builder: 'webpack5',
+      },
+    });
+
+    const config = storybookConfig.webpackFinal(dummyWebpackConfig);
+
+    expect(config.plugins?.[0]).toBeInstanceOf(VirtualModulesPlugin);
+
+    expect(VirtualModulesPlugin).toHaveBeenCalledTimes(1);
+    expect(VirtualModulesPlugin).toHaveBeenNthCalledWith(1, {
+      './__entry.js': `import('./__bootstrap.js');`,
+      './__bootstrap.js': `import 'first';\nimport 'second';`,
+    });
+  });
+
   it('should add module federation plugin with provided configuration', () => {
     const dummyModuleFederationConfig = {
       name: 'dummyConfig',
@@ -75,7 +99,7 @@ describe('withStorybookModuleFederation', () => {
 
     const config = storybookConfig.webpackFinal(dummyWebpackConfig);
 
-    expect(config.plugins?.[0]).toBeInstanceOf(
+    expect(config.plugins?.[1]).toBeInstanceOf(
       container.ModuleFederationPlugin
     );
 
@@ -84,27 +108,5 @@ describe('withStorybookModuleFederation', () => {
       1,
       dummyModuleFederationConfig
     );
-  });
-  it('should add virtual modules plugin with entry configuration', () => {
-    const wrapper = withStorybookModuleFederation({});
-
-    const dummyWebpackConfig = {
-      entry: ['first', 'second'],
-    };
-
-    const storybookConfig = wrapper({
-      core: {
-        builder: 'webpack5',
-      },
-    });
-
-    const config = storybookConfig.webpackFinal(dummyWebpackConfig);
-
-    expect(config.plugins?.[1]).toBeInstanceOf(VirtualModulesPlugin);
-
-    expect(VirtualModulesPlugin).toHaveBeenCalledTimes(1);
-    expect(VirtualModulesPlugin).toHaveBeenNthCalledWith(1, {
-      './__entry.js': `import('first');\nimport('second');`,
-    });
   });
 });

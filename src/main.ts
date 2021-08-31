@@ -1,11 +1,11 @@
 import VirtualModulesPlugin from 'webpack-virtual-modules';
-import { container } from 'webpack';
 import {
+  ModuleFederationPlugin,
   StorybookConfigInput,
   StorybookConfigOutput,
   WebpackConfig,
   ModuleFederationPluginOptions,
-} from './types';
+} from './plugin';
 
 const defaultConfig = (config: WebpackConfig) => config;
 
@@ -20,8 +20,6 @@ export const withStorybookModuleFederation =
       );
     }
 
-    const { ModuleFederationPlugin } = container;
-
     const newStorybookConfig: StorybookConfigOutput = {
       ...storybookConfig,
 
@@ -35,16 +33,17 @@ export const withStorybookModuleFederation =
           generatedWebpackConfig.plugins = [];
         }
 
-        generatedWebpackConfig.plugins.push(
-          new ModuleFederationPlugin(moduleFederationConfig)
+        generatedWebpackConfig.plugins.unshift(
+          new VirtualModulesPlugin({
+            './__entry.js': `import('./__bootstrap.js');`,
+            './__bootstrap.js': entry
+              .map((entryFile) => `import '${entryFile}';`)
+              .join('\n'),
+          })
         );
 
         generatedWebpackConfig.plugins.push(
-          new VirtualModulesPlugin({
-            './__entry.js': entry
-              .map((entryFile) => `import('${entryFile}');`)
-              .join('\n'),
-          })
+          new ModuleFederationPlugin(moduleFederationConfig)
         );
 
         return generatedWebpackConfig;
