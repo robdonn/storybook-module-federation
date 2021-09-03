@@ -1,0 +1,26 @@
+{
+  "name": "storybook-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "start-storybook -p 9000",
+    "build": "build-storybook"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-essentials": "^6.3.8",
+    "@storybook/addon-links": "^6.3.8",
+    "@storybook/builder-webpack5": "^6.3.8",
+    "@storybook/manager-webpack5": "^6.3.8",
+    "@storybook/react": "^6.3.8",
+    "babel-loader": "^8.2.2",
+    "storybook-module-federation": "^0.4.0",
+    "webpack": "^5.51.1"
+  }
+}

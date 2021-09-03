@@ -12,6 +12,10 @@
     "url": "https://robdonn.com"
   },
   "license": "MIT",
+  "keywords": [
+    "storybook",
+    "module federation"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest",
