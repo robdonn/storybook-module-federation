@@ -9,6 +9,35 @@ import {
 
 const defaultConfig = (config: WebpackConfig) => config;
 
+export const checkPublicPath = (config: WebpackConfig) => {
+  if (!config.output) {
+    return;
+  }
+
+  if (
+    typeof config.output?.publicPath === 'string' &&
+    config.output?.publicPath === ''
+  ) {
+    delete config.output.publicPath;
+    return;
+  }
+
+  if (!config.output?.publicPath) {
+    return;
+  }
+
+  if (typeof config.output.publicPath === 'string') {
+    if (
+      config.output.publicPath.startsWith('./') ||
+      (config.output.publicPath.startsWith('/') &&
+        !config.output.publicPath.startsWith('//'))
+    ) {
+      console.warn(`Using a relative or root publicPath may cause issues with loading federated modules.
+It is advised to use the full host name if known, or set to "undefined" and allow Webpack to determine it for you.`);
+    }
+  }
+};
+
 export const withStorybookModuleFederation =
   (moduleFederationConfig: ModuleFederationPluginOptions) =>
   (storybookConfig: StorybookConfigInput): StorybookConfigOutput => {
@@ -45,6 +74,12 @@ export const withStorybookModuleFederation =
         generatedWebpackConfig.plugins.push(
           new ModuleFederationPlugin(moduleFederationConfig)
         );
+
+        if (generatedWebpackConfig?.optimization?.runtimeChunk) {
+          generatedWebpackConfig.optimization.runtimeChunk = false;
+        }
+
+        checkPublicPath(generatedWebpackConfig);
 
         return generatedWebpackConfig;
       },
