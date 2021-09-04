@@ -1,45 +1,21 @@
 import VirtualModulesPlugin from 'webpack-virtual-modules';
+import { checkPublicPath } from './checkPublickPath';
 import {
   ModuleFederationPlugin,
   StorybookConfigInput,
   StorybookConfigOutput,
   WebpackConfig,
   ModuleFederationPluginOptions,
+  Options,
 } from './plugin';
 
 const defaultConfig = (config: WebpackConfig) => config;
 
-export const checkPublicPath = (config: WebpackConfig) => {
-  if (!config.output) {
-    return;
-  }
-
-  if (
-    typeof config.output?.publicPath === 'string' &&
-    config.output?.publicPath === ''
-  ) {
-    delete config.output.publicPath;
-    return;
-  }
-
-  if (!config.output?.publicPath) {
-    return;
-  }
-
-  if (typeof config.output.publicPath === 'string') {
-    if (
-      config.output.publicPath.startsWith('./') ||
-      (config.output.publicPath.startsWith('/') &&
-        !config.output.publicPath.startsWith('//'))
-    ) {
-      console.warn(`Using a relative or root publicPath may cause issues with loading federated modules.
-It is advised to use the full host name if known, or set to "undefined" and allow Webpack to determine it for you.`);
-    }
-  }
-};
-
 export const withStorybookModuleFederation =
-  (moduleFederationConfig: ModuleFederationPluginOptions) =>
+  (
+    moduleFederationConfig: ModuleFederationPluginOptions,
+    options: Options = {}
+  ) =>
   (storybookConfig: StorybookConfigInput): StorybookConfigOutput => {
     const { webpackFinal = defaultConfig } = storybookConfig;
 
@@ -79,7 +55,7 @@ export const withStorybookModuleFederation =
           generatedWebpackConfig.optimization.runtimeChunk = false;
         }
 
-        checkPublicPath(generatedWebpackConfig);
+        checkPublicPath(generatedWebpackConfig, options);
 
         return generatedWebpackConfig;
       },
