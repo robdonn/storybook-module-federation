@@ -4,9 +4,8 @@ const {
 
 module.exports = withStorybookModuleFederation({
   name: 'components',
-  filename: '__remote/entry.js',
-  exposes: {
-    './Button': require.resolve('../src/components/Button/Button.jsx'),
+  remotes: {
+    reactApp: 'reactApp@//localhost:8000/__remote/entry.js',
   },
   shared: {
     react: {

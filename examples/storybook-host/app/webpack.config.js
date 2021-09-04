@@ -20,14 +20,19 @@ module.exports = {
         test: /\.jsx?/,
         loader: 'babel-loader',
       },
+      {
+        test: /\.css/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin(),
     new ModuleFederationPlugin({
       name: 'reactApp',
-      remotes: {
-        components: 'components@//localhost:9000/__remote/entry.js',
+      filename: '__remote/entry.js',
+      exposes: {
+        './Button': require.resolve('./src/components/Button/Button.jsx'),
       },
       shared: {
         react: {
