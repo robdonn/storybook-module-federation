@@ -20,7 +20,7 @@
     "@storybook/manager-webpack5": "^6.3.8",
     "@storybook/react": "^6.3.8",
     "babel-loader": "^8.2.2",
-    "storybook-module-federation": "^0.4.0",
+    "storybook-module-federation": "^0.5.0",
     "webpack": "^5.51.1"
   }
 }

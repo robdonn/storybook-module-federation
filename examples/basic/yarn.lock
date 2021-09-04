@@ -11784,10 +11784,10 @@ storybook-addon-outline@^1.4.1:
     "@storybook/core-events" "^6.3.0"
     ts-dedent "^2.1.1"
 
-storybook-module-federation@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/storybook-module-federation/-/storybook-module-federation-0.4.0.tgz#ad01868f818d174fa5730293cdafded0d9fadf11"
-  integrity sha512-AAt2dyDIERR+qZlkKVAj8AK1b5iB2zayZEGfYnMruJHJUQGAUGwSjZuf83iG84iu+MXnfiw7NdFlo5uGTjcaVA==
+storybook-module-federation@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/storybook-module-federation/-/storybook-module-federation-0.5.0.tgz#01818e0a8fac6826cb7454ac4742772c392bd5b0"
+  integrity sha512-bNqzBAZFyEvcn0nnFje+3/KS4Kh9oPJg17LlFEexydVne8Hb8vVXjb5732Mrh7ZeVHn4kTpP9uE4TPiO7U3eIg==
   dependencies:
     webpack-virtual-modules "^0.4.3"
 
