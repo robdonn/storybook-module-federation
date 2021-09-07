@@ -1,15 +1,26 @@
+import path from 'path';
 import VirtualModulesPlugin from 'webpack-virtual-modules';
 import { checkPublicPath } from './checkPublickPath';
 import {
   ModuleFederationPlugin,
   StorybookConfigInput,
   StorybookConfigOutput,
-  WebpackConfig,
   ModuleFederationPluginOptions,
   Options,
+  WebpackFinal,
 } from './plugin';
 
-const defaultConfig = (config: WebpackConfig) => config;
+const defaultConfig: WebpackFinal = (config) => config;
+
+const correctImportPath = (context: string, entryFile: string) => {
+  const relative = path.relative(context, entryFile).replace(/\\/g, '/');
+
+  if (relative.includes('node_modules/')) {
+    return relative.split('node_modules/')[1];
+  }
+
+  return `./${relative}`;
+};
 
 export const withStorybookModuleFederation =
   (
@@ -30,7 +41,7 @@ export const withStorybookModuleFederation =
 
       webpackFinal: (...args) => {
         const generatedWebpackConfig = webpackFinal(...args);
-        const { entry } = generatedWebpackConfig;
+        const { entry, context } = generatedWebpackConfig;
 
         generatedWebpackConfig.entry = ['./__entry.js'];
 
@@ -42,7 +53,13 @@ export const withStorybookModuleFederation =
           new VirtualModulesPlugin({
             './__entry.js': `import('./__bootstrap.js');`,
             './__bootstrap.js': entry
-              .map((entryFile) => `import '${entryFile}';`)
+              .map(
+                (entryFile) =>
+                  `import '${correctImportPath(
+                    context || process.cwd(),
+                    entryFile
+                  )}';`
+              )
               .join('\n'),
           })
         );
