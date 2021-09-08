@@ -1,6 +1,6 @@
-import path from 'path';
 import VirtualModulesPlugin from 'webpack-virtual-modules';
-import { checkPublicPath } from './checkPublickPath';
+import { checkPublicPath } from './checkPublicPath';
+import { correctImportPath } from './correctImportPath';
 import {
   ModuleFederationPlugin,
   StorybookConfigInput,
@@ -11,16 +11,6 @@ import {
 } from './plugin';
 
 const defaultConfig: WebpackFinal = (config) => config;
-
-const correctImportPath = (context: string, entryFile: string) => {
-  const relative = path.relative(context, entryFile).replace(/\\/g, '/');
-
-  if (relative.includes('node_modules/')) {
-    return relative.split('node_modules/')[1];
-  }
-
-  return `./${relative}`;
-};
 
 export const withStorybookModuleFederation =
   (
