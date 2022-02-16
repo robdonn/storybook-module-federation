@@ -29,8 +29,8 @@ export const withStorybookModuleFederation =
     const newStorybookConfig: StorybookConfigOutput = {
       ...storybookConfig,
 
-      webpackFinal: (...args) => {
-        const generatedWebpackConfig = webpackFinal(...args);
+      webpackFinal: async (...args) => {
+        const generatedWebpackConfig = await webpackFinal(...args);
         const { entry, context } = generatedWebpackConfig;
 
         generatedWebpackConfig.entry = ['./__entry.js'];

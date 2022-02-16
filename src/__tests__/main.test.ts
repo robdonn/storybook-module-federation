@@ -39,7 +39,7 @@ describe('withStorybookModuleFederation', () => {
     }
   );
 
-  it('should update the entry file for the webpack configuration', () => {
+  it('should update the entry file for the webpack configuration', async () => {
     const wrapper = withStorybookModuleFederation({});
 
     const dummyWebpackConfig = {
@@ -52,12 +52,12 @@ describe('withStorybookModuleFederation', () => {
       },
     });
 
-    const config = storybookConfig.webpackFinal(dummyWebpackConfig);
+    const config = await storybookConfig.webpackFinal(dummyWebpackConfig);
 
     expect(config.entry).toEqual(['./__entry.js']);
   });
 
-  it('should add virtual modules plugin with entry configuration', () => {
+  it('should add virtual modules plugin with entry configuration', async () => {
     const wrapper = withStorybookModuleFederation({});
 
     const dummyWebpackConfig = {
@@ -70,7 +70,7 @@ describe('withStorybookModuleFederation', () => {
       },
     });
 
-    const config = storybookConfig.webpackFinal(dummyWebpackConfig);
+    const config = await storybookConfig.webpackFinal(dummyWebpackConfig);
 
     expect(config.plugins?.[0]).toBeInstanceOf(VirtualModulesPlugin);
 
@@ -81,7 +81,7 @@ describe('withStorybookModuleFederation', () => {
     });
   });
 
-  it('should add module federation plugin with provided configuration', () => {
+  it('should add module federation plugin with provided configuration', async () => {
     const dummyModuleFederationConfig = {
       name: 'dummyConfig',
     };
@@ -97,7 +97,7 @@ describe('withStorybookModuleFederation', () => {
       },
     });
 
-    const config = storybookConfig.webpackFinal(dummyWebpackConfig);
+    const config = await storybookConfig.webpackFinal(dummyWebpackConfig);
 
     expect(config.plugins?.[1]).toBeInstanceOf(
       container.ModuleFederationPlugin
