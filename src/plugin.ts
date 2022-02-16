@@ -12,7 +12,9 @@ export declare interface WebpackConfig extends Configuration {
   entry: string[];
 }
 
-export declare type WebpackFinal = (config: WebpackConfig) => WebpackConfig;
+export declare type WebpackFinal = (
+  config: WebpackConfig
+) => Promise<WebpackConfig> | WebpackConfig;
 
 export declare interface StorybookConfigInput {
   core?: {
