@@ -1,5 +1,5 @@
 import { WebpackConfig } from '../plugin';
-import { checkPublicPath } from '../checkPublickPath';
+import { checkPublicPath } from '../checkPublicPath';
 
 const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
 const exit = jest

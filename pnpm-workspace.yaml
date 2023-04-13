@@ -1,0 +1,3 @@
+packages:
+  - examples/v6/storybook-host/*
+  - examples/v6/storybook-remote/*

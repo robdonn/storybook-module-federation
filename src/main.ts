@@ -1,4 +1,5 @@
 import VirtualModulesPlugin from 'webpack-virtual-modules';
+import { container } from 'webpack';
 import { checkPublicPath } from './checkPublicPath';
 import { correctImportPath } from './correctImportPath';
 import {
@@ -12,6 +13,11 @@ import {
 
 const defaultConfig: WebpackFinal = (config) => config;
 
+/* istanbul ignore next */
+if (!container.ModuleFederationPlugin) {
+  throw new Error('Webpack 5 required');
+}
+
 export const withStorybookModuleFederation =
   (
     moduleFederationConfig: ModuleFederationPluginOptions,
@@ -19,12 +25,6 @@ export const withStorybookModuleFederation =
   ) =>
   (storybookConfig: StorybookConfigInput): StorybookConfigOutput => {
     const { webpackFinal = defaultConfig } = storybookConfig;
-
-    if (storybookConfig?.core?.builder !== 'webpack5') {
-      throw new Error(
-        'Webpack 5 required: Configure Storybook to use the webpack5 builder'
-      );
-    }
 
     const newStorybookConfig: StorybookConfigOutput = {
       ...storybookConfig,

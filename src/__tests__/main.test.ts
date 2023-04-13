@@ -19,26 +19,6 @@ describe('withStorybookModuleFederation', () => {
     expect(withStorybookModuleFederation({})).toEqual(expect.any(Function));
   });
 
-  it.each([
-    ['core is undefined', undefined],
-    ['core does not have builder property', {}],
-    ['builder property is not set to "webpack5"', { builder: 'webpack4' }],
-  ])(
-    'should throw error if storybook is not configured for webpack 5 - %s',
-    (_, core) => {
-      const wrapper = withStorybookModuleFederation({});
-
-      const storybookConfig: StorybookConfigInput = {};
-      storybookConfig.core = core;
-
-      expect(() => wrapper(storybookConfig)).toThrowError(
-        new Error(
-          'Webpack 5 required: Configure Storybook to use the webpack5 builder'
-        )
-      );
-    }
-  );
-
   it('should update the entry file for the webpack configuration', async () => {
     const wrapper = withStorybookModuleFederation({});
 

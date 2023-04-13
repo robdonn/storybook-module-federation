@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "@storybook-host-v6/react-example",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -7,6 +7,7 @@
     "start": "webpack serve"
   },
   "dependencies": {
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },

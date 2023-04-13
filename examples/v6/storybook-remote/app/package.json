@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "@storybook-remote-v6/react-example",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

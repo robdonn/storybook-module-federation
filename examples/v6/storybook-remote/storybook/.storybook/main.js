@@ -1,4 +1,6 @@
-const { withStorybookModuleFederation } = require('../../../..');
+const {
+  withStorybookModuleFederation,
+} = require('storybook-module-federation');
 
 module.exports = withStorybookModuleFederation({
   name: 'components',

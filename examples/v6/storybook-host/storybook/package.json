@@ -1,5 +1,5 @@
 {
-  "name": "storybook-example",
+  "name": "@storybook-host-v6/storybook-example",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "@storybook/manager-webpack5": "^6.3.8",
     "@storybook/react": "^6.3.8",
     "babel-loader": "^8.2.2",
-    "storybook-module-federation": "^0.5.0",
+    "storybook-module-federation": "workspace:*",
     "webpack": "^5.51.1"
   }
 }
