@@ -9,7 +9,7 @@ export declare type ModuleFederationPluginOptions = ConstructorParameters<
 >[0];
 
 export declare interface WebpackConfig extends Configuration {
-  entry: string[];
+  entry: string[] | Record<string, string[]>;
 }
 
 export declare type WebpackFinal = (

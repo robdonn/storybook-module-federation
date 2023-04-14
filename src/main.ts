@@ -1,4 +1,5 @@
 import VirtualModulesPlugin from 'webpack-virtual-modules';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { container } from 'webpack';
 import { checkPublicPath } from './checkPublicPath';
 import { correctImportPath } from './correctImportPath';
@@ -24,6 +25,12 @@ export const withStorybookModuleFederation =
     options: Options = {}
   ) =>
   (storybookConfig: StorybookConfigInput): StorybookConfigOutput => {
+    const { name = 'mfComponents' } = moduleFederationConfig;
+
+    if (!moduleFederationConfig.name) {
+      moduleFederationConfig.name = name;
+    }
+
     const { webpackFinal = defaultConfig } = storybookConfig;
 
     const newStorybookConfig: StorybookConfigOutput = {
@@ -33,16 +40,34 @@ export const withStorybookModuleFederation =
         const generatedWebpackConfig = await webpackFinal(...args);
         const { entry, context } = generatedWebpackConfig;
 
-        generatedWebpackConfig.entry = ['./__entry.js'];
+        generatedWebpackConfig.entry = {
+          main: ['./__entry.js'],
+          [name]: ['./__internal_remoteEntry.js'],
+        };
 
         if (!generatedWebpackConfig.plugins) {
           generatedWebpackConfig.plugins = [];
         }
 
+        const htmlPlugin = generatedWebpackConfig.plugins.find(
+          (plugin) => plugin instanceof HtmlWebpackPlugin
+        );
+
+        if (htmlPlugin) {
+          (
+            htmlPlugin as unknown as {
+              userOptions: { excludeChunks?: string[] };
+            }
+          ).userOptions.excludeChunks = [name];
+        }
+
         generatedWebpackConfig.plugins.unshift(
           new VirtualModulesPlugin({
             './__entry.js': `import('./__bootstrap.js');`,
-            './__bootstrap.js': entry
+            './__bootstrap.js': (Array.isArray(entry)
+              ? entry
+              : Object.values(entry).flat()
+            )
               .map(
                 (entryFile) =>
                   `import '${correctImportPath(
@@ -51,6 +76,10 @@ export const withStorybookModuleFederation =
                   )}';`
               )
               .join('\n'),
+            './__internal_remoteEntry.js': `__webpack_public_path__ = new URL(document.currentScript.src).origin + "/";
+            Object.assign(window, {
+              ${name}: __webpack_require__("webpack/container/entry/${name}"),
+            });`,
           })
         );
 
