@@ -35,6 +35,7 @@
     "webpack-virtual-modules": "^0.4.3"
   },
   "peerDependencies": {
+    "storybook": "^6.2",
     "webpack": "^5"
   }
 }

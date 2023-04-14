@@ -28,9 +28,8 @@ const {
 } = require('storybook-module-federation');
 
 const storybookConfig = {
-  core: {
-    builder: 'webpack5',
-  },
+  // Your storybook config
+  // ...
 };
 
 const moduleFederationConfig = {
