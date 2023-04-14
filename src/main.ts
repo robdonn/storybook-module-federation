@@ -19,12 +19,14 @@ if (!container.ModuleFederationPlugin) {
   throw new Error('Webpack 5 required');
 }
 
-export const withStorybookModuleFederation =
-  (
-    moduleFederationConfig: ModuleFederationPluginOptions,
-    options: Options = {}
-  ) =>
-  (storybookConfig: StorybookConfigInput): StorybookConfigOutput => {
+export type WithStorybookModuleFederation = (
+  moduleFederationConfig: ModuleFederationPluginOptions,
+  options: Options
+) => (storybookConfig: StorybookConfigInput) => StorybookConfigOutput;
+
+export const withStorybookModuleFederation: WithStorybookModuleFederation =
+  (moduleFederationConfig, options = {}) =>
+  (storybookConfig) => {
     const { name = 'mfComponents' } = moduleFederationConfig;
 
     if (!moduleFederationConfig.name) {
@@ -99,3 +101,5 @@ export const withStorybookModuleFederation =
 
     return newStorybookConfig;
   };
+
+export { ModuleFederationPluginOptions, Options } from './plugin';

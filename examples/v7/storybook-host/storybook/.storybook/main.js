@@ -17,7 +17,8 @@ const config = {
   },
 };
 
-const moduleFederationWrapper = withStorybookModuleFederation({
+/** @type { import('storybook-module-federation').ModuleFederationPluginOptions } */
+const moduleFederationConfig = {
   name: 'components',
   remotes: {
     reactApp: 'reactApp@//localhost:8000/__remote/entry.js',
@@ -32,6 +33,6 @@ const moduleFederationWrapper = withStorybookModuleFederation({
       requiredVersion: false,
     },
   },
-});
+};
 
-export default moduleFederationWrapper(config);
+export default withStorybookModuleFederation(moduleFederationConfig)(config);
