@@ -1,0 +1,13 @@
+{
+  "name": "storybook-host-v6",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start:v6:host": "pnpm -r --parallel --filter=\"@storybook-host-v6/*\" start",
+    "start:v6:remote": "pnpm -r --parallel --filter=\"@storybook-remote-v6/*\" start",
+    "start:v7:host": "pnpm -r --parallel --filter=\"@storybook-host-v7/*\" start",
+    "start:v7:remote": "pnpm -r --parallel --filter=\"@storybook-remote-v7/*\" start"
+  }
+}

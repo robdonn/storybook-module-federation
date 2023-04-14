@@ -9,7 +9,7 @@ export declare type ModuleFederationPluginOptions = ConstructorParameters<
 >[0];
 
 export declare interface WebpackConfig extends Configuration {
-  entry: string[];
+  entry: string[] | Record<string, string[]>;
 }
 
 export declare type WebpackFinal = (
@@ -27,6 +27,4 @@ export declare interface StorybookConfigOutput extends StorybookConfigInput {
   webpackFinal: WebpackFinal;
 }
 
-export declare interface Options {
-  ignorePublicPath?: boolean;
-}
+export declare interface Options {}

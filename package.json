@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepublish": "yarn build"
+    "prepublish": "pnpm build"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
@@ -31,9 +31,11 @@
     "webpack": "^5.51.1"
   },
   "dependencies": {
+    "html-webpack-plugin": "^5.3.2",
     "webpack-virtual-modules": "^0.4.3"
   },
   "peerDependencies": {
+    "storybook": "^6.2",
     "webpack": "^5"
   }
 }

@@ -1,5 +1,6 @@
 src/
+examples/
 node_modules/
 jest.config.js
 tsconfig.json
-yarn.lock
+pnpm-lock.yml

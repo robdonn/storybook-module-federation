@@ -1,6 +1,5 @@
 import { container } from 'webpack';
 import VirtualModulesPlugin from 'webpack-virtual-modules';
-import { StorybookConfigInput, WebpackConfig } from '../plugin';
 import { withStorybookModuleFederation } from '../main';
 
 jest.mock('webpack', () => ({
@@ -19,26 +18,6 @@ describe('withStorybookModuleFederation', () => {
     expect(withStorybookModuleFederation({})).toEqual(expect.any(Function));
   });
 
-  it.each([
-    ['core is undefined', undefined],
-    ['core does not have builder property', {}],
-    ['builder property is not set to "webpack5"', { builder: 'webpack4' }],
-  ])(
-    'should throw error if storybook is not configured for webpack 5 - %s',
-    (_, core) => {
-      const wrapper = withStorybookModuleFederation({});
-
-      const storybookConfig: StorybookConfigInput = {};
-      storybookConfig.core = core;
-
-      expect(() => wrapper(storybookConfig)).toThrowError(
-        new Error(
-          'Webpack 5 required: Configure Storybook to use the webpack5 builder'
-        )
-      );
-    }
-  );
-
   it('should update the entry file for the webpack configuration', async () => {
     const wrapper = withStorybookModuleFederation({});
 
@@ -46,15 +25,14 @@ describe('withStorybookModuleFederation', () => {
       entry: ['first', 'second'],
     };
 
-    const storybookConfig = wrapper({
-      core: {
-        builder: 'webpack5',
-      },
-    });
+    const storybookConfig = wrapper({});
 
     const config = await storybookConfig.webpackFinal(dummyWebpackConfig);
 
-    expect(config.entry).toEqual(['./__entry.js']);
+    expect(config.entry).toEqual({
+      main: ['./__entry.js'],
+      mfComponents: ['./__internal_remoteEntry.js'],
+    });
   });
 
   it('should add virtual modules plugin with entry configuration', async () => {
@@ -75,10 +53,20 @@ describe('withStorybookModuleFederation', () => {
     expect(config.plugins?.[0]).toBeInstanceOf(VirtualModulesPlugin);
 
     expect(VirtualModulesPlugin).toHaveBeenCalledTimes(1);
-    expect(VirtualModulesPlugin).toHaveBeenNthCalledWith(1, {
-      './__entry.js': `import('./__bootstrap.js');`,
-      './__bootstrap.js': `import 'first';\nimport 'second';`,
-    });
+    expect((VirtualModulesPlugin as jest.Mock).mock.calls[0])
+      .toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "./__bootstrap.js": "import 'first';
+      import 'second';",
+          "./__entry.js": "import('./__bootstrap.js');",
+          "./__internal_remoteEntry.js": "__webpack_public_path__ = new URL(document.currentScript.src).origin + \\"/\\";
+                  Object.assign(window, {
+                    mfComponents: __webpack_require__(\\"webpack/container/entry/mfComponents\\"),
+                  });",
+        },
+      ]
+    `);
   });
 
   it('should add module federation plugin with provided configuration', async () => {
@@ -91,11 +79,7 @@ describe('withStorybookModuleFederation', () => {
       entry: ['first', 'second'],
     };
 
-    const storybookConfig = wrapper({
-      core: {
-        builder: 'webpack5',
-      },
-    });
+    const storybookConfig = wrapper({});
 
     const config = await storybookConfig.webpackFinal(dummyWebpackConfig);
 
