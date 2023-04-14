@@ -27,6 +27,4 @@ export declare interface StorybookConfigOutput extends StorybookConfigInput {
   webpackFinal: WebpackFinal;
 }
 
-export declare interface Options {
-  ignorePublicPath?: boolean;
-}
+export declare interface Options {}
